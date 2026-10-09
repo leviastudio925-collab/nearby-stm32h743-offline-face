@@ -1,0 +1,21 @@
+/* Insert INSIDE SECTIONS in the STM32CubeIDE .ld file.
+   The MEMORY region RAM_D1 must refer to AXI SRAM at 0x24000000 (512 KiB).
+   Do NOT place these sections in DTCMRAM at 0x20000000.
+   Check the final .map file and memory consumption after linking. */
+.camera_dma (NOLOAD) :
+{
+  . = ALIGN(32);
+  *(.camera_dma)
+  . = ALIGN(32);
+} >RAM_D1
+
+.face_work (NOLOAD) :
+{
+  . = ALIGN(32);
+  *(.face_work)
+  . = ALIGN(32);
+} >RAM_D1
+
+/* These are NOLOAD: FaceApp_Init() explicitly initializes face.
+   DMA writes the entire frame before the CPU processes it.
+   Keil users must make equivalent AXI SRAM regions in the scatter file. */
